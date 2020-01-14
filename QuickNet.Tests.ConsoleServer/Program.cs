@@ -23,18 +23,26 @@ namespace QuickNet.Tests.ConsoleServer
 
             while (true)
             {
-                // Blocks while waiting for a connection
-                QuicConnection client = listener.AcceptQuicClient();
+                try
+                {
+                    // Blocks while waiting for a connection
+                    QuicConnection client = listener.AcceptQuicClient();
 
-                // Assign an action when a data is received from that client.
-                client.OnDataReceived += (c) => {
+                    // Assign an action when a data is received from that client.
+                    client.OnDataReceived += (c) =>
+                    {
 
-                    byte[] data = c.Data;
+                        byte[] data = c.Data;
 
-                    Console.WriteLine("Data received: " + Encoding.UTF8.GetString(data));
+                        Console.WriteLine("Data received: " + Encoding.UTF8.GetString(data));
 
-                    c.Send(Encoding.UTF8.GetBytes("Echo!"));
-                };
+                        c.Send(Encoding.UTF8.GetBytes("Echo!"));
+                    };
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
         }
 
